@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>لوحة تحليل إعلانات هنقرستيشن</title>
+<style>
+:root{--bg:#f3f5f8;--card:#fff;--tx:#1f2937;--mu:#6b7280;--navy:#1f3a5f;--side:#16304f;--teal:#2a9d8f;--amber:#f4a261;--red:#e76f51;--gold:#e9c46a;--bd:#e5e7eb;--chip:#223f66;--chipx:#c9d6e8;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f172a;--card:#1e293b;--tx:#e5e7eb;--mu:#94a3b8;--navy:#8fb4e8;--bd:#334155;--side:#0b1220}}
+:root[data-theme="dark"]{--bg:#0f172a;--card:#1e293b;--tx:#e5e7eb;--mu:#94a3b8;--navy:#8fb4e8;--bd:#334155;--side:#0b1220}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:Tahoma,"Segoe UI",Arial,sans-serif}
+header{background:#1f3a5f;color:#fff;padding:18px 24px}header h1{margin:0;font-size:22px}header p{margin:6px 0 0;font-size:13px;color:#c9d6e8}
+.wrap{display:grid;grid-template-columns:260px 1fr;gap:16px;padding:16px;max-width:1400px;margin:auto}
+aside{background:var(--side);border-radius:12px;padding:14px;color:#fff;align-self:start}
+aside h2{margin:0 0 10px;font-size:15px;display:flex;justify-content:space-between;align-items:center}
+aside h3{margin:14px 0 6px;font-size:12px;color:#c9d6e8;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid #35557f;background:var(--chip);color:#fff;border-radius:999px;padding:5px 10px;font-size:12px;cursor:pointer;font-family:inherit}
+.chip.on{background:var(--amber);border-color:var(--amber);color:#1f2937;font-weight:700}
+#reset{background:none;border:1px solid #35557f;color:#c9d6e8;border-radius:8px;font-size:11px;padding:3px 8px;cursor:pointer;font-family:inherit}
+main{min-width:0}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.kpi{background:var(--card);border-radius:12px;padding:12px;text-align:center;border-top:4px solid var(--c)}
+.kpi b{display:block;font-size:12px;color:var(--mu);font-weight:600}.kpi span{display:block;font-size:28px;font-weight:800;color:var(--c);margin:6px 0 2px}.kpi small{font-size:11px;color:var(--mu)}
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:12px}
+.card{background:var(--card);border-radius:12px;padding:14px;min-width:0}.card h4{margin:0 0 12px;font-size:14px;color:var(--navy)}
+.c2{grid-column:span 2}.c3{grid-column:span 3}
+.row{display:grid;grid-template-columns:minmax(90px,34%) 1fr 48px;gap:8px;align-items:center;margin:7px 0;font-size:12px}
+.row .t{background:var(--bd);border-radius:6px;height:16px;overflow:hidden}.row .t i{display:block;height:100%;border-radius:6px;transition:width .4s}
+.row em{font-style:normal;font-weight:700;text-align:start}
+.cols{display:flex;align-items:flex-end;gap:10px;height:190px}.cols div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;font-size:12px}
+.cols i{display:block;width:70%;background:var(--teal);border-radius:6px 6px 0 0;transition:height .4s}.cols b{margin-bottom:3px}.cols span{margin-top:6px;color:var(--mu);font-size:11px;text-align:center}
+.donut{display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:center}.ring{width:140px;height:140px;border-radius:50%;position:relative}.ring:after{content:"";position:absolute;inset:32px;background:var(--card);border-radius:50%}
+.lg{font-size:12px;line-height:1.9}.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:6px}
+.empty{color:var(--mu);font-size:13px;padding:20px;text-align:center}
+footer{text-align:center;color:var(--mu);font-size:11px;padding:10px 16px 24px}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.c2,.c3{grid-column:span 6}}
+
+@keyframes up{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+@keyframes grow{from{transform:scaleX(0)}}@keyframes rise{from{transform:scaleY(0)}}
+@keyframes pop{from{opacity:0;transform:rotate(-140deg) scale(.4)}}
+@keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+@keyframes shine{0%{background-position:0 0}100%{background-position:200% 0}}
+header{position:relative;overflow:hidden;background:linear-gradient(120deg,#1f3a5f,#2a5d8f,#1f3a5f,#2a5d8f);background-size:200% 100%;animation:shine 10s linear infinite}
+header>*{position:relative;z-index:1}
+header .o{position:absolute;z-index:0;border-radius:50%;background:rgba(255,255,255,.09);animation:flt 5s ease-in-out infinite}
+#replay{position:absolute;z-index:2;top:16px;left:20px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:inherit;transition:transform .15s,background .2s}
+#replay:hover{background:rgba(255,255,255,.28);transform:scale(1.05)}#replay:active{transform:scale(.93)}
+.kpi,.card{animation:up .65s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d,0s);transition:transform .25s,box-shadow .25s}
+.kpi:hover,.card:hover{transform:translateY(-4px);box-shadow:0 12px 26px rgba(0,0,0,.14)}
+.grid .card:nth-child(1){--d:.35s}.grid .card:nth-child(2){--d:.45s}.grid .card:nth-child(3){--d:.55s}.grid .card:nth-child(4){--d:.65s}.grid .card:nth-child(5){--d:.75s}
+.row .t i{transform-origin:right;animation:grow .9s cubic-bezier(.2,.8,.2,1) both}
+.cols i{transform-origin:bottom;animation:rise .9s cubic-bezier(.2,.8,.2,1) both}
+.ring{animation:pop 1s cubic-bezier(.2,.8,.2,1) both}
+[data-k]{cursor:pointer}.dim{opacity:.35}
+.row,.cols>div,.lg>div{transition:opacity .25s,transform .2s}.row:hover,.lg>div:hover{transform:translateX(-5px)}.cols>div:hover i{filter:brightness(1.2)}
+.row.pick,.cols>div.pick,.lg>div.pick{font-weight:700}
+.chip{transition:transform .15s,background .2s}.chip:hover{transform:translateY(-2px)}.chip:active{transform:scale(.92)}
+#tip{position:fixed;pointer-events:none;background:#111827;color:#fff;padding:6px 10px;border-radius:8px;font-size:12px;opacity:0;transition:opacity .15s;z-index:9;max-width:260px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<header><span class="o" style="width:110px;height:110px;right:5%;top:-30px"></span><span class="o" style="width:60px;height:60px;left:28%;top:40px;animation-delay:-2s"></span><span class="o" style="width:90px;height:90px;left:62%;top:-25px;animation-delay:-3.5s"></span><button id="replay">↻ إعادة تشغيل الحركة</button><h1>لوحة تحكم: أثر إعلانات هنقرستيشن على قرار الطلب</h1><p id="sub"></p></header>
+<div class="wrap"><aside><h2>الفلاتر <button id="reset">إعادة ضبط</button></h2><div id="filters"></div></aside>
+<main><div class="kpis" id="kpis"></div>
+<div class="grid">
+<div class="card c2"><h4>وسيلة متابعة الإعلانات</h4><div id="ch1"></div></div>
+<div class="card c2"><h4>نوع الإعلان الأكثر جذبًا</h4><div id="ch2"></div></div>
+<div class="card c2"><h4>عدد مرات الطلب شهريًا</h4><div id="ch3"></div></div>
+<div class="card c3"><h4>نسبة الطلب بعد مشاهدة الإعلان حسب نوع الإعلان</h4><div id="ch4"></div></div>
+<div class="card c3"><h4>متوسط الموافقة على عبارات الاستبيان (من 5)</h4><div id="ch5"></div></div>
+</div></main></div>
+<div id="tip"></div><footer>المصدر: استبيان إعلانات هنقرستيشن · اضغطي على أي زر أو عمود أو شريحة في أي رسم وستتحدّث كل الرسومات معًا</footer>
+<script>
+const D=[["من 20 إلى 24 سنة","دبلوم","من 1001 إلى 2000 ريال","تيك توك","من 3 إلى 5","إعلان بمشاركة مشاهير","ربما","16/10",3,3,4,5,4,2,3,2],["من 25 إلى 29 سنة","بكالوريوس","أكثر من 2000 ريال","إكس (تويتر)","أكثر من 5","فيديو قصير","لا","16/10",2,3,2,1,4,2,4,3],["من 20 إلى 24 سنة","بكالوريوس","أقل من 500 ريال","سناب شات","لا أطلب","فيديو قصير","نعم","16/10",4,4,3,5,5,5,5,5],["من 20 إلى 24 سنة","دبلوم","أقل من 500 ريال","سناب شات","من 1 إلى 2","عروض وخصومات","نعم","16/10",4,4,4,5,5,5,5,5],["من 20 إلى 24 سنة","بكالوريوس","من 500 إلى 1000 ريال","لا أتابع إعلاناتها","لا أطلب","فيديو قصير","نعم","16/10",4,3,4,4,4,4,4,4],["من 20 إلى 24 سنة","بكالوريوس","أقل من 500 ريال","سناب شات","لا أطلب","عروض وخصومات","نعم","16/10",3,4,3,4,5,3,3,5],["30 سنة فأكثر","أخرى","أكثر من 2000 ريال","إنستغرام","من 3 إلى 5","محتوى مستخدمين وتجارب عملاء","لا","17/10",3,4,3,2,3,2,4,3],["من 25 إلى 29 سنة","أخرى","أقل من 500 ريال","لا أتابع إعلاناتها","لا أطلب","محتوى مستخدمين وتجارب عملاء","ربما","17/10",2,4,3,2,3,2,4,4],["من 20 إلى 24 سنة","بكالوريوس","من 1001 إلى 2000 ريال","تيك توك","من 3 إلى 5","محتوى مستخدمين وتجارب عملاء","لا","17/10",4,4,3,5,5,5,5,5],["أقل من 20 سنة","دبلوم","أقل من 500 ريال","سناب شات","لا أطلب","عروض وخصومات","نعم","17/10",4,4,4,4,5,5,5,5],["أقل من 20 سنة","بكالوريوس","أكثر من 2000 ريال","تيك توك","أكثر من 5","إعلان بمشاركة مشاهير","نعم","17/10",4,4,4,5,5,1,2,2],["من 20 إلى 24 سنة","دبلوم","من 1001 إلى 2000 ريال","تيك توك","من 1 إلى 2","إعلان بمشاركة مشاهير","ربما","17/10",3,2,3,3,4,2,1,2],["من 20 إلى 24 سنة","بكالوريوس","من 500 إلى 1000 ريال","إنستغرام","من 3 إلى 5","محتوى مستخدمين وتجارب عملاء","ربما","17/10",4,4,4,3,4,3,4,4],["أقل من 20 سنة","دبلوم","أقل من 500 ريال","سناب شات","لا أطلب","عروض وخصومات","نعم","17/10",4,4,4,5,5,5,5,5],["من 20 إلى 24 سنة","بكالوريوس","أقل من 500 ريال","إنستغرام","لا أطلب","عروض وخصومات","لا","17/10",3,3,3,3,3,3,3,3],["من 25 إلى 29 سنة","بكالوريوس","من 1001 إلى 2000 ريال","إنستغرام","من 1 إلى 2","عروض وخصومات","نعم","17/10",4,4,3,4,5,4,3,4],["من 20 إلى 24 سنة","دبلوم","أقل من 500 ريال","سناب شات","من 1 إلى 2","فيديو قصير","لا","17/10",3,3,3,4,3,3,3,3],["من 20 إلى 24 سنة","بكالوريوس","من 500 إلى 1000 ريال","تيك توك","من 3 إلى 5","فيديو قصير","ربما","17/10",3,3,3,3,3,3,3,3],["أقل من 20 سنة","دبلوم","من 500 إلى 1000 ريال","إكس (تويتر)","أكثر من 5","إعلان بمشاركة مشاهير","ربما","17/10",2,4,2,5,1,5,1,5],["من 20 إلى 24 سنة","بكالوريوس","من 1001 إلى 2000 ريال","تيك توك","من 1 إلى 2","فيديو قصير","نعم","17/10",4,4,4,5,5,5,5,5],["من 20 إلى 24 سنة","بكالوريوس","من 500 إلى 1000 ريال","إنستغرام","من 3 إلى 5","فيديو قصير","لا","17/10",3,2,4,5,3,4,2,4],["أقل من 20 سنة","دبلوم","من 1001 إلى 2000 ريال","تيك توك","من 1 إلى 2","عروض وخصومات","نعم","17/10",4,4,4,5,5,5,5,4],["أقل من 20 سنة","أخرى","أكثر من 2000 ريال","إكس (تويتر)","أكثر من 5","إعلان بمشاركة مشاهير","ربما","17/10",3,4,4,4,3,3,4,5],["من 20 إلى 24 سنة","بكالوريوس","أقل من 500 ريال","تيك توك","من 3 إلى 5","إعلان بمشاركة مشاهير","لا","17/10",3,2,3,2,4,5,3,4],["أقل من 20 سنة","دبلوم","أقل من 500 ريال","سناب شات","لا أطلب","عروض وخصومات","نعم","17/10",3,3,4,5,5,5,2,4],["من 20 إلى 24 سنة","دبلوم","من 500 إلى 1000 ريال","لا أتابع إعلاناتها","أكثر من 5","إعلان بمشاركة مشاهير","نعم","18/10",4,3,3,2,2,2,3,5],["أقل من 20 سنة","بكالوريوس","أقل من 500 ريال","إنستغرام","من 3 إلى 5","فيديو قصير","لا","20/10",2,3,3,4,5,3,3,5],["أقل من 20 سنة","بكالوريوس","أقل من 500 ريال","تيك توك","من 3 إلى 5","فيديو قصير","نعم","20/10",4,3,4,5,4,4,5,5],["أقل من 20 سنة","دبلوم","أقل من 500 ريال","سناب شات","من 3 إلى 5","فيديو قصير","نعم","20/10",4,4,4,5,5,5,5,5],["أقل من 20 سنة","دبلوم","أقل من 500 ريال","سناب شات","من 1 إلى 2","فيديو قصير","نعم","20/10",4,4,4,4,3,3,5,4],["من 25 إلى 29 سنة","أخرى","من 500 إلى 1000 ريال","إنستغرام","من 1 إلى 2","عروض وخصومات","نعم","20/10",4,4,4,2,5,3,5,5],["من 25 إلى 29 سنة","بكالوريوس","أكثر من 2000 ريال","إنستغرام","من 3 إلى 5","إعلان بمشاركة مشاهير","ربما","20/10",4,4,4,5,3,4,3,4],["من 25 إلى 29 سنة","بكالوريوس","من 1001 إلى 2000 ريال","لا أتابع إعلاناتها","لا أطلب","محتوى مستخدمين وتجارب عملاء","نعم","20/10",4,4,4,2,2,2,2,2],["من 20 إلى 24 سنة","بكالوريوس","من 1001 إلى 2000 ريال","تيك توك","من 3 إلى 5","إعلان بمشاركة مشاهير","نعم","20/10",4,4,4,2,3,4,1,5],["من 20 إلى 24 سنة","بكالوريوس","من 1001 إلى 2000 ريال","إنستغرام","من 1 إلى 2","محتوى مستخدمين وتجارب عملاء","نعم","20/10",4,3,3,5,5,4,4,4],["أقل من 20 سنة","دبلوم","من 500 إلى 1000 ريال","إنستغرام","لا أطلب","محتوى مستخدمين وتجارب عملاء","لا","20/10",4,2,4,4,3,4,4,5],["30 سنة فأكثر","بكالوريوس","من 500 إلى 1000 ريال","إكس (تويتر)","أكثر من 5","إعلان بمشاركة مشاهير","ربما","20/10",3,3,4,2,5,5,5,5],["من 25 إلى 29 سنة","بكالوريوس","أكثر من 2000 ريال","سناب شات","لا أطلب","محتوى مستخدمين وتجارب عملاء","نعم","20/10",3,4,3,5,4,5,3,5],["من 25 إلى 29 سنة","أخرى","من 1001 إلى 2000 ريال","تيك توك","لا أطلب","عروض وخصومات","ربما","20/10",2,2,2,4,3,1,2,5],["أقل من 20 سنة","أخرى","أقل من 500 ريال","تيك توك","لا أطلب","إعلان بمشاركة مشاهير","ربما","20/10",3,4,4,4,4,4,4,4],["من 20 إلى 24 سنة","بكالوريوس","من 500 إلى 1000 ريال","سناب شات","من 1 إلى 2","إعلان بمشاركة مشاهير","ربما","20/10",2,3,4,5,4,5,5,5],["30 سنة فأكثر","بكالوريوس","من 1001 إلى 2000 ريال","إكس (تويتر)","من 3 إلى 5","إعلان بمشاركة مشاهير","نعم","20/10",2,3,4,3,4,2,4,1],["30 سنة فأكثر","أخرى","من 1001 إلى 2000 ريال","إكس (تويتر)","من 3 إلى 5","إعلان بمشاركة مشاهير","ربما","20/10",2,4,4,3,4,5,2,1],["أقل من 20 سنة","أخرى","من 1001 إلى 2000 ريال","إنستغرام","أكثر من 5","عروض وخصومات","ربما","20/10",4,3,4,3,2,5,3,5],["أقل من 20 سنة","بكالوريوس","من 1001 إلى 2000 ريال","تيك توك","أكثر من 5","محتوى مستخدمين وتجارب عملاء","لا","20/10",2,3,3,4,5,4,3,4],["من 25 إلى 29 سنة","بكالوريوس","من 1001 إلى 2000 ريال","إكس (تويتر)","من 3 إلى 5","إعلان بمشاركة مشاهير","لا","20/10",2,3,3,3,3,3,3,3],["30 سنة فأكثر","أخرى","أكثر من 2000 ريال","لا أتابع إعلاناتها","أكثر من 5","محتوى مستخدمين وتجارب عملاء","ربما","20/10",2,2,2,1,1,1,1,1],["من 25 إلى 29 سنة","بكالوريوس","من 1001 إلى 2000 ريال","إكس (تويتر)","من 3 إلى 5","إعلان بمشاركة مشاهير","لا","20/10",3,3,3,2,2,2,2,2],["من 20 إلى 24 سنة","دبلوم","من 500 إلى 1000 ريال","تيك توك","من 1 إلى 2","فيديو قصير","نعم","20/10",4,4,4,3,3,3,3,3],["أقل من 20 سنة","أخرى","أقل من 500 ريال","إنستغرام","لا أطلب","عروض وخصومات","نعم","20/10",4,4,2,4,4,4,4,4]];
+const AD=["إعلان بمشاركة مشاهير","فيديو قصير","عروض وخصومات","محتوى مستخدمين وتجارب عملاء"],FR=["لا أطلب","من 1 إلى 2","من 3 إلى 5","أكثر من 5"],PL=["تيك توك","إنستغرام","سناب شات","إكس (تويتر)","لا أتابع إعلاناتها"];
+const F=[["age","الفئة العمرية",0,["أقل من 20 سنة","من 20 إلى 24 سنة","من 25 إلى 29 سنة","30 سنة فأكثر"]],["edu","المستوى الدراسي",1,["دبلوم","بكالوريوس","أخرى"]],["bud","المصروف الشهري",2,["أقل من 500 ريال","من 500 إلى 1000 ريال","من 1001 إلى 2000 ريال","أكثر من 2000 ريال"]],["pl","وسيلة المتابعة",3,PL],["ad","نوع الإعلان الأجذب",5,AD],["fr","تكرار الطلب شهريًا",4,FR],["dt","تاريخ الرد",7,["16/10","17/10","18/10","20/10"]]];
+const ST=["تعرّفني بالعروض والخدمات الجديدة","تقدم معلومات واضحة عن الخدمة","كثرة ظهورها تزعجني","تلفت انتباهي أثناء التصفح","تثير اهتمامي بتجربة الخدمة","تزيد رغبتي في الطلب","أثق في محتواها","أثّرت في قراري بالطلب"];
+const COL=["#1f3a5f","#2a9d8f","#f4a261","#e76f51"];
+const sel={};F.forEach(f=>sel[f[0]]=new Set());
+const $=id=>document.getElementById(id),pc=x=>(x*100).toFixed(1)+"%",cnt=(rs,i,v)=>rs.filter(r=>r[i]===v).length;
+const KF=[x=>Math.round(x),pc,x=>x.toFixed(2),pc,pc];let prev=[0,0,0,0,0];
+const KM=[["عدد المشاركين","حجم العينة المعروضة","#1f3a5f"],["الطلب بعد الإعلان","أجابوا بـ«نعم»","#2a9d8f"],["تأثير القرار","متوسط من 5","#d98a3d"],["الثقة بالمحتوى","موافق / موافق بشدة","#c9a227"],["الانزعاج","يزعجه كثرة الإعلانات","#e76f51"]];
+function build(){$("filters").innerHTML=F.map(f=>`<h3>${f[1]}</h3><div class="chips">${f[3].map(v=>`<button class="chip" data-k="${f[0]}" data-v="${v}">${v}</button>`).join("")}</div>`).join("");
+$("kpis").innerHTML=KM.map((k,i)=>`<div class="kpi" style="--c:${k[2]};--d:${i*.08}s"><b>${k[0]}</b><span id="k${i}">0</span><small>${k[1]}</small></div>`).join("")}
+function toggle(k,v){const s=sel[k];s.has(v)?s.delete(v):s.add(v);document.querySelectorAll(".chip").forEach(b=>{if(b.dataset.k===k)b.classList.toggle("on",sel[k].has(b.dataset.v))});draw()}
+document.addEventListener("click",e=>{const t=e.target.closest("[data-k]");if(t)toggle(t.dataset.k,t.dataset.v)});
+const tip=$("tip");document.addEventListener("mousemove",e=>{const t=e.target.closest("[data-tip]");tip.style.opacity=t?1:0;if(t){tip.textContent=t.dataset.tip;tip.style.left=Math.min(e.clientX+14,innerWidth-270)+"px";tip.style.top=e.clientY+16+"px"}});
+$("reset").onclick=()=>{F.forEach(f=>sel[f[0]].clear());document.querySelectorAll(".chip").forEach(b=>b.classList.remove("on"));draw()};
+$("replay").onclick=()=>{document.querySelectorAll(".kpi,.card").forEach(e=>{e.style.animation="none";e.offsetWidth;e.style.animation=""});prev=[0,0,0,0,0];draw()};
+function count(i,to){const el=$("k"+i),from=prev[i],t0=performance.now();(function f(t){const p=Math.min(1,(t-t0)/800),e=1-Math.pow(1-p,3);el.textContent=KF[i](from+(to-from)*e);if(p<1)requestAnimationFrame(f)})(t0);prev[i]=to}
+const bars=(items,max,fmt,k)=>items.map(([l,v,c],i)=>{const on=k&&sel[k].has(l),dim=k&&sel[k].size&&!on;return `<div class="row${dim?" dim":""}${on?" pick":""}" ${k?`data-k="${k}" data-v="${l}"`:""} data-tip="${l}: ${fmt(v)}"><span>${l}</span><div class="t"><i style="width:${max?Math.min(100,v/max*100):0}%;background:${c||"#1f3a5f"};animation-delay:${i*.08}s"></i></div><em>${fmt(v)}</em></div>`}).join("");
+const base=ex=>D.filter(r=>F.every(f=>f[0]===ex||!sel[f[0]].size||sel[f[0]].has(r[f[2]])));
+function draw(){const rs=base(null),n=rs.length,act=F.reduce((a,f)=>a+sel[f[0]].size,0);
+$("sub").textContent=`الردود المعروضة حاليًا: ${n} من أصل ${D.length}`+(act?` · فلاتر مفعّلة: ${act}`:"");
+const mean=k=>n?rs.reduce((a,r)=>a+r[8+k],0)/n:0,agree=k=>n?rs.filter(r=>r[8+k]>=4).length/n:0;
+[n,n?cnt(rs,6,"نعم")/n:0,mean(7),agree(6),agree(2)].forEach((v,i)=>count(i,v));
+if(!n){["ch1","ch2","ch3","ch4","ch5"].forEach(i=>$(i).innerHTML='<div class="empty">لا توجد ردود تطابق الفلاتر المختارة، اضغطي «إعادة ضبط»</div>');return}
+let r1=base("pl");const pm=Math.max(1,...PL.map(p=>cnt(r1,3,p)));$("ch1").innerHTML=bars(PL.map(p=>[p,cnt(r1,3,p)]),pm,v=>v+" رد","pl");
+const r2=base("ad"),tot=AD.map(a=>cnt(r2,5,a)),sm=tot.reduce((a,b)=>a+b,0)||1;let acc=0;
+const stops=tot.map((v,i)=>{const s=acc/sm*360;acc+=v;return `${COL[i]} ${s}deg ${acc/sm*360}deg`}).join(",");
+$("ch2").innerHTML=`<div class="donut"><div class="ring" style="background:conic-gradient(${stops})"></div><div class="lg">${AD.map((a,i)=>{const on=sel.ad.has(a),dim=sel.ad.size&&!on;return `<div class="${dim?"dim":""}${on?" pick":""}" data-k="ad" data-v="${a}" data-tip="${a}: ${tot[i]} رد (${pc(tot[i]/sm)})"><i style="background:${COL[i]}"></i>${a}: ${pc(tot[i]/sm)}</div>`}).join("")}</div></div>`;
+const r3=base("fr"),fm=Math.max(1,...FR.map(v=>cnt(r3,4,v)));$("ch3").innerHTML=`<div class="cols">${FR.map((v,i)=>{const c=cnt(r3,4,v),on=sel.fr.has(v),dim=sel.fr.size&&!on;return `<div class="${dim?"dim":""}${on?" pick":""}" data-k="fr" data-v="${v}" data-tip="${v}: ${c} رد"><b>${c}</b><i style="height:${c/fm*80}%;animation-delay:${i*.1}s"></i><span>${v}</span></div>`}).join("")}</div>`;
+$("ch4").innerHTML=bars(AD.map(a=>{const g=r2.filter(r=>r[5]===a);return [a,g.length?g.filter(r=>r[6]==="نعم").length/g.length:0]}),1,pc,"ad").replace(/#1f3a5f/g,"#f4a261");
+$("ch5").innerHTML=bars(ST.map((s,k)=>[s,mean(k),k===2?"#e76f51":"#1f3a5f"]),5,v=>v.toFixed(2))}
+build();draw();
+</script></body></html>
